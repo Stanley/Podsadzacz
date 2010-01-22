@@ -2,3 +2,6 @@
 tmp/*
 .idea
 *~
+test/*
+db/*
+config/couchdb.yml
