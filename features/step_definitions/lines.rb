@@ -1,4 +1,6 @@
-Given /^(only )?line with (.+) exists$/ do |only, params|                                                                                                                                         
+# encoding: utf-8
+
+Given /^(only )?line with (.+) exists$/ do |only, params|
   Given "there are no lines" if only
   @line = Line.new
   @line.begin_date = Date.today
