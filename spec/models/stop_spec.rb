@@ -5,9 +5,6 @@ describe Stop do
   context "crating new" do
 
     before(:all) do
-      Merb::Cache[:memcached].delete_all
-      Stop.auto_migrate!
-      
       @days = [
         Date.parse("Mon"),
         Date.parse("Sat"),
@@ -28,11 +25,11 @@ describe Stop do
       @stop.should be_valid
     end
 
-    it "should be indexed in sphinxsearch" do
-      system('indexer stops --rotate')
-      Stop.search(:conditions => [@stop.name]).should include(@stop)
-      Stop.search(:conditions => [@stop.location]).should include(@stop)
-    end
+#    it "should be indexed in sphinxsearch" do
+#      system('indexer stops --rotate')
+#      Stop.search(:conditions => [@stop.name]).should include(@stop)
+#      Stop.search(:conditions => [@stop.location]).should include(@stop)
+#    end
 
     it "should not be active" do
       @stop.active?.should be_false
@@ -74,16 +71,16 @@ describe Stop do
       @stop.prevstops.should be_empty
     end
 
-    it "shoud have no surroinding" do
-      @stop.surrounding.should eql("brak → Przystanek → brak")
+    it "shoud not have any surrounding stops" do
+      @stop.surrounding.should eql("brak &rarr; Przystanek &rarr; brak")
     end
 
     it "should belong to a hub" do
-      @stop.hub.should equal(Hub.get("Przystanek"))
+      @stop.hub.should include(@stop)
     end
 
     it "should have a hub, which contains only one stop" do
-      @stop.hub.should have(1).all
+      @stop.hub.should have(1).items
     end
 
     it "should not have gcharts" do
