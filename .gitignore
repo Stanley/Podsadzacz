@@ -5,3 +5,4 @@ tmp/*
 test/*
 db/*
 config/couchdb.yml
+doc/
