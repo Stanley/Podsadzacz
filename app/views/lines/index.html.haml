@@ -1,0 +1,36 @@
+.ui-widget-header
+  %h1< |
+    = "Linie " + @types[@type].to_s
+    - unless @active
+      = " (nieaktywne)"
+
+%p#filtr
+  %b Filtr:
+  - @types.each do |url, type|
+    = link_to type, ""
+-#    = _link_to type.capitalize, url(:lines, @active ? "active" : "inactive", url), :class => "#{'ui-state-focus' if url == @type}"
+
+%ul.list.lines
+  - @lines.each do |lines|
+    %li
+      -# :title => "#{'Zmieniona' if lines.first.temporary?}"
+      %span= lines['key'][0]
+      %ul
+        - lines['value'].sort.each do |id, destination|
+          %li
+            -# if line[1].nil?
+              .admin= _link_to 'Uzupełnij trasę!', url(:new_line_timetable,line)
+            = link_to destination, line_path(id), {:title => "Trasa ??? &#65515; " + destination}
+
+-# if session.authenticated?
+  %p.admin
+    = _link_to 'Dodaj nową linię', url(:new_line)
+    %br/
+    = _link_to 'Sprawdź aktualność rozkładów', url(:lines)
+- if @active
+  = link_to 'Nieaktywne linie', lines_path #url(:lines, "inactive", @type)
+- else
+  = link_to 'Aktywne linie', lines_path #( "active", @type)
+%br
+
+= link_to '', '/javascripts/lines/index.js', :id => "scriptLink"

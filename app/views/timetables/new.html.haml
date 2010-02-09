@@ -1,0 +1,15 @@
+%h1
+  ="Nowy przystanek na lini #{@line.no}"
+  ="(kierunek #{@line.directionName})"
+
+= partial :form, :submit => "Dodaj"
+
+%p#navigation
+  Nawigacja:
+  = _link_to 'Strona główna', '/'
+  &raquo;
+  = _link_to 'Spis linii', url(:lines)
+  &raquo;
+  = _link_to @line.no, url(:line, @line)
+  &raquo;
+  = _link_to 'Przystanki', url(:line_timetables, @line)

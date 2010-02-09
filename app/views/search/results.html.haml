@@ -1,0 +1,48 @@
+%h3
+  ="Godzina #{@hour.to_s}"
+-# for r in @search.route
+  - for t in r
+    - if t > 0
+      = link_to t, url(:timetable, t)
+    - else
+      =t
+  %br
+
+-#@result.each do |track|
+  -track.each do |r|
+    %p
+      %b czas oczekiwania:
+      = "#{r[0]}min."
+      %br
+      %b czas podróży:
+      = "#{r[1]}min."
+      %br
+      %b Przystanek początkowy:
+      = "#{r[2].stop.name}, linia: #{r[2].line.no}"
+      %br
+      %b Przystanek końcowy:
+      = "#{r[3].stop.name}, linia: #{r[3].line.no}"
+
+-#@result.each do |track|
+-@result.each do |r|
+  %p
+    %b czas oczekiwania:
+    = "#{r.wait}min."
+    %br
+    %b czas podróży:
+    = "#{r.ride}min."
+    %br
+    %b Przystanek początkowy:
+    = "#{r.node}, linia: #{r.timetable['line']}"
+    %br
+    -#
+      %b Przystanek końcowy:
+      = "#{r[3].stop.name}, linia: #{r[3].line.no}"
+
+
+= "Znaleziono w #{@time} sekund"
+%br
+
+
+%textarea
+  =@result.inspect

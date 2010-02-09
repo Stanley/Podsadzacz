@@ -1,0 +1,12 @@
+= error_messages_for @stop
+= _form_for(@stop, :action => (url(:stop, @stop) rescue url(:stops))) do
+  %p
+    = text_field :name, :label => "Nazwa"
+  %p
+    = text_field :location, :label => "Ulica"
+  %p
+    = label "Położenie"
+    = text_field :lat
+    = text_field :lng
+  %p#submit
+    = submit submit

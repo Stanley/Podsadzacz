@@ -1,0 +1,35 @@
+!!! 1.1
+%html{:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => "en"}
+  %head
+    %meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}/
+    %title Rush hours - Kraków
+    = stylesheet_link_tag 'style', 'mint-choc/jquery-ui-1.7.2.custom', 'jquery.jgrowl', 'jquery.lightbox.packed'
+    = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js', 'jquery-ui-1.7.2.custom.min.js', 'jquery.jgrowl_minimized', 'jquery.lightbox.min', 'http://maps.google.com/maps/api/js?sensor=false&', 'cookie', 'couch-lite', 'application'
+    - # http://maps.google.com/maps/api/js?sensor=true
+  %body
+    #container
+      #rightMenu
+        #body.ui-widget-content
+          .tr
+            .td
+              #load_icon                
+              #logo
+                = link_to '', '/', :class => "remote", :rel => "yield"
+                %div{:title => "Relese date: 18.01.2009"}
+                  v 0.1 beta
+          .tr
+            #yield
+              -# unless message[:notice].blank?
+                #notice= message[:notice]
+              -# unless message[:error].blank?
+                #error= message[:error]
+              = yield
+          .tr
+            #footer
+              %p
+                Content is available under
+                =link_to 'Attribution 3.0', 'http://creativecommons.org/licenses/by/3.0'
+                %br
+                Author:
+                =link_to 'Stanisław Wasiutyński', 'http://wasiutynski.net'
+      #map

@@ -1,0 +1,25 @@
+.ui-state-error.ui-corner-bottom
+  %p{:style => 'margin-left: 5px'}
+    %span.ui-icon.ui-icon-alert
+    Uwaga. Strona znajduje się w fazie budowy. Nie cała jej funkcjonalność została jeszcze zaimplementowana. W przypadku występowania błędów, koniecznie skontaktuj się z autorem.
+
+%p#hello
+  Witaj, na niezależnej stronie, z otwartą bazą danych krakowskiej komunikacji miejskiej! Odkryj nowe informacje, powstałe dzięki dokładnej analizie rozkładów jazdy oraz geolokalizacji wszystkich przystanków.
+
+  = link_to 'Wyszukiwarka', '/search', :class => "remote ui-state-default ui-corner-all"
+  = link_to 'Wykaz linii', lines_path, :class => "remote ui-state-default ui-corner-all"
+  = link_to 'Przystanki', stops_path, :class => "remote ui-state-default ui-corner-all", :style => 'text-decoration: none'
+
+/
+  .button#search_button
+    = link_to 'Wyszukiwarka', '/search', :class => "remote"
+  .button#lines_button
+    = link_to 'Wykaz linii', lines_path, :class => "remote"
+
+/
+  #links
+    Zobacz również:
+    %ul
+      %li= link_to 'Komunikaty mpk', '#'
+      %li= link_to 'O stronie', '#'
+      %li= link_to 'Autor', '#'

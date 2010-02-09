@@ -1,0 +1,137 @@
+:javascript
+  var map = root.map
+
+  $.jGrowl("Kliknij poniżej, aby zbliżyć widok na przystanek: #{ @stop.name }.<br /><br />Skala: <a href='javascript: map.setZoom(17)'>50m</a> <a href='javascript: map.setZoom(16)'>100m</a> <a href='javascript: map.setZoom(15)'>200m</a>.")
+  map.panTo(new google.maps.LatLng(#{ @stop.lng }, #{ @stop.lat }))
+  try{ google.maps.event.trigger(root.markers['#{ @stop['_id'] }'], 'click') } catch(e){}
+
+
+  $("#yield ul.list.timetables > li").click(function(){
+    var link = $(this).find("a:first-child")
+    console.log(link.attr('href'))
+    showTimetable(link.attr('href'))
+    // return false
+  })
+
+  // $(".fg-button").unbind()
+  $(".fg-button:not(.ui-state-disabled)")
+    .hover(
+      function(){
+        $(this).addClass("ui-state-hover")
+      },
+      function(){
+        $(this).removeClass("ui-state-hover")
+      }
+    )
+    .mousedown(function(){
+      if($(this).hasClass("ui-state-active")){
+        $("#yield").load(this.href)
+      }
+      else{
+        $(this).parents(".fg-buttonset-single:first").find(".fg-button.ui-state-active").removeClass("ui-state-active")
+        $(this).addClass("ui-state-active")
+        if(!$(this).hasClass("remote")){
+          $(".fg-buttonset > .numbers:visible").hide()
+          $(".list > li:visible").hide()
+          $(".fg-buttonset > .numbers[rel=" + $(this).attr("rel") + "], .list > li[rel=" + $(this).attr("rel") + "]").fadeIn("fast")
+        }
+      }
+    })
+    .mouseup(function(){
+      if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button, .fg-buttonset-multi .fg-button') ){
+        $(this).removeClass("ui-state-active")
+      }
+    })
+    .click(function(){
+      return false
+    })
+
+  $(".fg-buttonset > .fg-button:first").addClass("ui-corner-left ui-state-active")
+  $(".fg-buttonset > .fg-button:last").addClass("ui-corner-right")
+  $(".fg-buttonset > .fg-button").width(100 / $(".fg-buttonset > .fg-button").length + "%")
+
+  div = document.createElement("div")
+  tallest = 0
+
+  $(".fg-buttonset > .fg-button").each(function() {
+    thisHeight = $(this).height();
+    if(thisHeight > tallest) {
+      tallest = thisHeight;
+    }
+    div.appendChild(this)
+  });
+
+  $(".fg-buttonset").prepend(div)
+  $(".fg-buttonset > div:first .fg-button").height(tallest);
+  $(".fg-buttonset > .numbers:not(:first)").hide()
+
+  function refresh(){
+    $.ajax({
+      url: "http://localhost:5984/podsadzacz_development/_design/Timetable/_view/by_time",
+      data: {limit: 20, startkey: ["#{ @stop['_id'] }", 2, "15:04"]},
+      dataType: "jsonp",
+      success: function(data){
+        console.log(data)
+        $("#current_timetables").empty()
+        if(data.length == 0){
+          $("#current_timetables").hide()
+            .prev().hide()
+        } else {
+          $("#current_timetables").show()
+            .prev().show()
+          $.each(data, function(i,item){
+
+            var parent = $("#timetable_"+item.id)
+            var a = document.createElement("a")
+            a.href = "/timetables/"+item.id
+            a.innerHTML = $("#timetable_"+ item.id +" > a").attr("rel")
+            var ul = document.createElement("ul")
+
+            $.each(item.m, function(j,min){
+              date = new Date()
+              date.setMinutes(date.getMinutes() + min)
+              if((m = date.getMinutes()) < 10) m = "0" + m
+              var hour = date.getHours() + ":" + m
+              var span = document.createElement("span")
+              span.innerHTML = "(" + min + " min.)"
+              span.className = "small"
+              var li = document.createElement("li")
+              li.innerHTML = hour
+              li.appendChild(span)
+              ul.appendChild(li)
+            })
+
+            var li = document.createElement("li")
+            li.rel = parent.attr('rel')
+            li.title = parent.attr('title')
+            li.appendChild(a)
+            li.appendChild(ul)
+            parent.hide()
+            $(li).appendTo($("#current_timetables"))
+          });
+        }
+
+        if($("#all_timetables li:visible").length == 0){
+          $("#all_timetables").hide()
+            .prev().hide()
+        } else{
+          $("#all_timetables").show()
+            .prev().show()
+        }
+
+        $("ul#current_timetables > li[rel!=" + $(".fg-buttonset > .numbers:first").attr("rel") + "]").hide()
+        $("ul#current_timetables > li")
+          .click(function(){ showTimetable( $(this).find("a:first").attr("href") ) })
+          .bind("mouseenter mouseleave", function(){
+            $(this).toggleClass("ui-state-default")
+          })
+          .bind("mousedown mouseup", function(){
+            $(this).toggleClass("ui-state-hover")
+            $(this).toggleClass("ui-state-default")
+          })
+      }
+    })
+  }
+
+  //refresh()
+  //var refreshId = window.setInterval("refresh()", 60000 );

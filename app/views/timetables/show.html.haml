@@ -1,0 +1,55 @@
+.table#timetable{:rel => @timetable.id}
+  .tr
+    .td
+      .no
+        = @line.no
+    .td
+      .table
+        .tr
+          .td#stopname
+            = @timetable.stop.name
+        .tr
+          .td#route
+            %b Trasa:
+            %span.upcase= @stops.first.name + ",&nbsp;"
+            %span>= @line.route
+            %span.upcase= ", " + @line.opposite.stops.first.name rescue nil
+  .tr
+    .td
+      .table
+        .tr
+          .td
+            %ol#stopslist{:start => @start}
+              - @stops.each do |stop|
+                -# class_name = (t == @timetable ? ['present'] : nil)
+                %li{:class => "class_name" , :style => "margin-left: #{"t.level * 15"}px"}
+                  = link_to stop.name, line_timetable_path(@line['_id'], stop['_id'])
+              - if @alternate_direction
+                %li{:style => "margin-left: 15px"}= link_to @alternate_direction.name, url(:timetable, @line.opposite.timetables.first)
+              %li= link_to @line.direction_name, url(:timetable, @line.opposite.timetables.select{|x| x.level == 0}.first) rescue nil
+    .td
+      .table#numbers
+        .tr
+          - @data.each_pair do |day, val|
+            .td
+              = day
+              .table
+                - val.each_with_index do |h, i|
+                  .tr
+                    .td<= (@timetable.start + i)%24
+                    .td<= h.join(" ")
+      #mpk
+        %p
+          Zakłócenia w ruchu powodują zmiany czasów odjazdów.
+        %p#description<
+          - unless @description.blank?
+            = @description.join("<br />")
+        %p
+          Rozkład ważny od
+          %b=@line.begin_date.strftime("%d.%m.%Y") if @line.begin_date
+          do
+          - if @line.end_date
+            %b=@line.end_date.strftime("%d.%m.%Y")
+          - else
+            odwołania
+        %p źródło: MPK Kraków

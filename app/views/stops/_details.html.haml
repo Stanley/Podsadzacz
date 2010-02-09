@@ -1,0 +1,49 @@
+%h1.ui-widget-header
+  - case @stop.typ
+    - when 1
+      =image_tag 'T.png', :title => "Przystanek tramwajowy"
+    - when 2
+      =image_tag 'A.png', :title => "Przystanek autobusowy"
+    - when 3
+      =image_tag 'AT.png', :title => "Przystanek autobusowo-tramwajowy"
+  =h @stop.name
+  - unless @stop.typ > 0
+    = "- przystanek nieczynny"
+
+%b Kierunek:
+.fg-buttonset.fg-buttonset-single
+  - @directions.each do |stop, timetables|
+    = link_to stop.name, stop_path(stop['_id']), :class => "fg-button ui-state-default ui-priority-primary", :title => "połączenia: " + stop.print_nextstops, :rel => stop.id.to_s
+    .numbers{:rel => stop.id}
+      -# lines.sort_by{|x| x.no}.each do |line|
+        = link_to line.no, line_path(line), :class => "fg-button ui-state-default remote", :title => "kierunek: " + line.direction_name
+      - timetables.each do |t|
+        = link_to t['line'], line_path(t.line_id), :class => "fg-button ui-state-default remote", :title => "kierunek: " #+ line.direction_name
+  - unless @unknown.empty?
+    = link_to "Nieznany", "#", :class => "fg-button ui-state-default ui-priority-primary", :rel => "-1"
+    .numbers{:rel => "-1"}
+      - for timetable in @unknown
+        = link_to timetable['line'], line_path(timetable.line_id), :class => "fg-button ui-state-default remote", :title => "kierunek: " #+ line.direction_name
+
+- if @opp.size != 0
+  %p
+    %b Przesiadki:
+    - @opp.each do |stop|
+      - location = stop.location.empty? ? "" : " (" + stop.location + ")"
+      = link_to @opp.size == 1 ? 'przystanek w drugą stronę' : stop.name + location , stop_path(stop['_id']), :title => 'połączenia: ' #+ opposite.print_nextstops
+
+.table#objDetails
+  .tr
+    .td
+      Bezpośredni zasięg:
+    .td
+      %strong{:title => @stop.range.to_s + " z " + @all.to_s + " przystanków"}= @stop.percent_range
+    .td
+      \%
+  .tr
+    .td
+      =link_to 'Natężenie ruchu:', @stop.gchart(Date.today)[:waiting], :class => 'gchart', :title => "Bronowice Nowe: Wykres czasu oczekiwania w zależności od czasu. Dane na dzień 01.01.2009"
+    .td
+      = @stop.vph(@time)
+    .td
+      %strong{:title => "pojazdów na godzinę"} vph

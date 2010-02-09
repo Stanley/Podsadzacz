@@ -1,0 +1,28 @@
+%h1 Szukaj połączeń
+- form_for :search, :url => { :action => "results" } do |f|
+  .table#search
+    .tr
+      .td
+        %b Od:
+      .td
+        = f.text_field "from"
+    .tr
+      .td
+        %b Do:
+      .td
+        = f.text_field "to"
+    .tr
+      .td= " "
+    .tr
+      .td
+        %b Czas:
+      .td
+        = f.select :id, ["Odjazdu", "Przyjazdu", "Jakikolwiek"]
+        = f.select :hour, @hours, { :selected => @selected}
+    .tr
+      .td
+        %b Dzień:
+      .td#searchDay
+        = f.select :day, ['Dzisiaj', 'Jutro', 'Dzień powszedni', 'Sobota', 'Niedziela' , 'Dokładana data...']
+  %p#submit
+    = f.submit :Szukaj

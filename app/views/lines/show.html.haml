@@ -1,0 +1,92 @@
+#YieldInTable
+  .tr
+    .td
+      .ui-widget-header#lineInfo{:title => "#{'Zmieniona' if @line.temp?}"}
+        .tr
+          %h1#lineNo{:title => "Linia tramwajowa"}
+            =h @line.no
+          #lineRoute
+            %div
+              - if @line.timetables.empty?
+                Brak trasy!
+                .admin= link_to '(Wyznacz nową trasę)', "url(:new_line_timetable,@line)"
+              - else
+                %span= @line.timetables.first.stop.name
+                %span>= ", " + @line.route + ",&nbsp;" 
+                %span= @line.direction
+
+      -unless @line.active?
+        .ui-widget
+          .ui-state-error
+            %p.state-error
+              %span.ui-icon.ui-icon-alert/
+              Ta linia nie jest aktywna
+
+      .table#objDetails
+        .tr
+          .td
+            Przystanki:
+          .td
+            = @line.timetables.size + 1
+        .tr
+          .td
+            = link_to 'Okres kursów:', @line.gchart(@date)[:okres], :class => 'gchart', :title => "Wzgórza Krzesławickie - Bronowice Nowe: Wykres czasu oczekiwania w zależności od czasu. Dane na dzień 01.01.2009"
+          .td
+            = @line.okres(@date)
+          .td
+            min
+        .tr
+          .td
+            Długość trasy:
+          .td
+            = (@line.length * 10).round / 10.0
+          .td
+            km
+        .tr
+          .td
+            =link_to 'Czas przejazdu:', @line.gchart(@date)[:time], :class => 'gchart', :title => "Wzgórza Krzesławickie - Bronowice Nowe: Wykres czasu przejazdu od pętli początkowej do końcowej w zależności od czasu, z pominięciem kursów które nie zaczynają lub nie kończą kursów na pętlach. Dane na dzień 01.01.2009"
+          .td
+            = @line.avg_time(@date)
+          .td
+            min
+        .tr
+          .td
+            =link_to 'Prędkość średnia:', @line.gchart(@date)[:avg], :class => 'gchart', :title => "Wzgórza Krzesławickie - Bronowice Nowe: Wykres prędkości średniej w zależności od przystanku i czasu. Dane na dzień 01.01.2009"
+          .td
+            = (@line.length / (@line.avg_time(@date) / 60.0) * 10).round / 10.0 rescue 0
+          .td
+            km/h
+        .tr
+          .td
+            Podatność na korki:
+          .td
+            %strong{:title => "Średnio #{@line.rush_percent(@date)}% mniejsza prędkość w godzinach szczytu. Najszybszy kurs: #{@line.thefastest_theslowest(@date)[0]} min. Najwolniejszy kurs: #{@line.thefastest_theslowest(@date)[1]} min."}= @line.rush_percent(@date)
+          .td
+            \%
+      #date-picker
+        Dane na dzień:
+        %b= @date
+        #slider
+      %p
+        -if @line.opposite
+          = link_to 'Pokaż przeciwną linię', line_path(@line.opposite['_id'])
+          %br
+        -if not @line.stops.empty?
+          = link_to 'Pokaż przystanki na trasie', line_timetables_path(@line['_id'])
+        -# elsif $admin
+          .admin= _link_to 'Wyznacz nową trasę', url(:new_line_timetable, @line)
+
+      -# if session.authenticated?
+        %p.admin
+          = _link_to 'Edytuj linię', url(:edit_line, @line)
+          %br
+          -unless @line.active?
+            = _link_to 'Usuń', url(:delete_line, @line)
+  .tr
+    .td
+      %p#navigation
+        Nawigacja:
+        = link_to 'Strona główna', '/'
+        &raquo;
+        = link_to 'Spis linii', lines_path
+= link_to '', "url(:line, @line)", :id => "scriptLink"

@@ -1,0 +1,35 @@
+= render :partial => 'details'
+
+%p
+  %b Odjazdy
+  = "(stan na "
+  %span#time= @time.strftime("%H:%M")
+  = "):"
+  
+%ul.list.timetables
+  - @stop.departures.each do |dep|
+    - if dep[:minutes_left].first >= 0
+      %li{:title => "kierunek: " + "dep[:timetable].line.direction_name", :id => "timetable_" + dep[:timetable].id.to_s, :rel => (dep[:timetable].nextinline.stop.id.to_s rescue nil)}
+        = link_to dep[:line].to_s, line_timetable_path(dep[:timetable].line_id, dep[:timetable].stop_id)
+        %ul
+          - dep[:minutes_left].each do |min|
+            %li
+              %span= (@time + 60*min).strftime("%H:%M")
+              %span.small= "(#{min} min.)"
+%br/
+
+-# if session.authenticated?
+  %p.admin
+    = _link_to 'Edytuj', url(:edit_stop, @stop)
+    = " | "
+    = _link_to 'Usuń', url(:delete_stop, @stop)
+
+%p#navigation
+  Nawigacja:
+  = link_to 'Strona główna', '/'
+  &raquo;
+  = link_to 'Spis przystanków', stops_path
+-#= link_to '', stop_path(@stop.id), :id => "scriptLink"
+
+- content_for :script do
+  = render :partial => 'script.js'

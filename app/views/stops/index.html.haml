@@ -1,0 +1,25 @@
+%h1.ui-widget-header= "Przystanki #{@types[@type]}"
+
+-# if session.authenticated?
+  %p.admin
+    = _link_to 'Nowy przystanek', url(:new_stop)
+%p
+  %b Live search:
+  = text_field :live, :search
+
+%p#filtr
+  %b Pokaż:
+  - @types.each do |url, type|
+    = link_to type.capitalize, stops_path, :class => "#{'ui-state-focus' if url == @type}"
+
+%ul.list.stops
+  - @stops.each do |stop|
+    %li
+      = link_to stop.name, stop_path(stop['_id']), :title => "Połączenia: " #+ stop.print_nextstops
+      %span.location= stop.location
+
+-# if session.authenticated?
+  %p.admin
+    = link_to 'Nowy przystanek', new_stop_path
+
+= link_to '', '/javascripts/stops/index.js', :id => "scriptLink"

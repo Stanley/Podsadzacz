@@ -1,0 +1,491 @@
+!temporaryLine_color = #fff700
+!table_highlight = #333
+!zebra_odd = #222
+!zebra_even = #111
+!font_color = #ddd
+!link_color = #fec400
+!dark_font = #666
+
+html,body
+  :height 100%
+  :margin 0
+  :padding 0
+  :font-size 14px
+  :font-family sans-serif
+  :overflow hidden
+a, a:visited
+  :text-decoration none
+  &:hover
+    :text-decoration underline
+img
+  :border 0
+input[type=text]
+  :width 100%
+select
+  :width 100%
+textarea
+  :height 200px
+  :width 100%
+h1
+  img
+    :vertical-align middle
+    :padding 5px 0
+ul
+  :padding 0 25px
+strong[title]
+  :font-weight inherit
+  :border-bottom thin dotted
+  :cursor help
+p
+  :clear both
+label
+  :white-space nowrap
+#container
+  :height 100%
+#filtr
+  :text-align center
+  > .actived
+    :border #FEC400 solid
+    :border-width 1px 0
+    &:hover
+      :text-decoration none
+#map
+  :height 100%
+  :padding-right 300px
+#rightMenu
+  :width 300px
+  :background #181c21 url(/images/gradient.png) 0 0 repeat-x fixed
+  :float right
+  :height 100%
+  :overflow-x hidden
+#body
+  :height 100%
+  :display table
+  :padding 0 10px
+  :border 0
+  #logo
+    :margin 5px auto 0
+    :position relative
+    :width 280px
+    :height 121px
+    :background transparent url("/images/jonnie.png") no-repeat 190px 6px
+    :border-bottom 1px solid #FEC400
+    > a
+      :display block
+      :width 100%
+      :height 100%
+    > div
+      :position absolute
+      :color red
+      :font-size 10px
+      :right 90px
+      :top 47px
+  >.tr
+    &:first-child
+      :height 124px
+    &:last-child
+      :width 100%
+.button
+  :width 200px
+  :margin 20px auto
+  :height 70px
+  :border 1px red solid
+#links
+  ul
+    :padding 0 20px
+    :margin-top 5px
+    :list-style-type circle
+#hello
+  :text-align justify
+  &:first-letter
+    :font-size 28px
+    :padding 3px 3px 0 0
+    :float left
+  .ui-state-default
+    :padding 20px
+    :width 160px
+    :display block
+    :text-align right
+    :margin 20px auto
+#notice, #error, .hidden
+  :display none
+.red
+  :color red
+.urgent
+  :background-color red
+#lineInfo, #linesIndex, #indexTimetables, #objDetails
+  :line-height 30px
+.table, #lineInfo, #YieldInTable
+  :display table
+.tr
+  :display table-row
+.td
+  :display table-cell
+#yield
+  :display table-cell
+  :height 100%
+  > .table
+    :width 100%
+#YieldInTable
+  >.tr
+    &:last-child
+      .td
+        :vertical-align bottom
+
+.fg-buttonset
+  .numbers
+    a
+      :margin-right 2px !important
+.numbers
+  :clear both
+  a
+    :border 1px #aaa solid
+    :background-color = !zebra_odd
+    :font-weight bold
+    :padding 5px 0
+    :display inline-block
+    :text-align center
+    :width 30px
+    :margin 3px 3px
+    &:hover
+      :border-color #666
+div.infowindow
+  :color = !dark_font
+  :max-width 266px
+  :min-height 100px
+  p
+    :margin 0
+    :padding 2px
+  a
+    :color blue
+  .numbers
+    > a
+      :background-color inherit
+      :color = !dark_font
+.small
+  :font-size 9px
+  :color gray
+.fieldWithErrors
+  :padding 2px
+  :background-color red
+  :display table
+#errorExplanation
+  :width 265px
+  :border 2px solid #FFBB96
+  :padding 7px
+  :padding-bottom 12px
+  :margin-bottom 20px
+  :background-color #f0f0f0
+  h2
+    :text-align left
+    :font-weight bold
+    :padding 5px 5px 5px 15px
+    :font-size 12px
+    :margin -7px
+    :background-color #FE5900
+    :color #fff
+  p
+    :color #333
+    :margin-bottom 0
+    :padding 5px
+  ul
+    li
+      :font-size 12px
+      :list-style square
+.admin
+  a
+    :border-bottom 1px red dotted
+    :color red !important
+    :margin-right 5px
+    &:hover
+      :background-color red
+      :color #fff !important
+      :text-decoration none
+#lineInfo
+  :border-color #FEC400
+  :border-width 0 0 1px
+  :border-style solid
+  :margin auto
+  :line-height 12px
+  :margin 0 auto 15px
+#lineInfo[title=Zmieniona]
+  :background-color = !temporaryLine_color
+  :color = !dark_font
+#lineNo
+  :font-size 40px
+  :font-weight bold
+  :height 60px
+  :line-height 60px
+  :text-align center
+  :width 60px
+  :display table-cell
+  :vertical-align middle
+#lineRoute
+  :display table-cell
+  :height 0
+  :vertical-align middle
+  :font-size 11px
+  > div
+    :max-height 54px
+    :overflow auto
+    > span
+      &:first-child, &:last-child
+        :text-transform uppercase
+.right
+  :text-align right
+.zebra
+  :display table-row
+.zebra > .td
+  :border-top 1px dashed #ccc
+.zebra p
+  :text-align center
+  :font-weight bold
+  :margin 0
+  :cursor pointer
+.zebra2Even
+  :background-color = !zebra_odd
+.zebra2Odd
+  :background-color = !zebra_even
+.zebra2Even, .zebra2Odd
+  &:hover
+    :background-color inherit
+#submit
+  :width 100%
+  :text-align center
+  :margin-top 10px
+div.auto_complete
+  :width 350px
+  :background #fff
+  :z-index 1
+  ul
+    :border 1px solid #888
+    :margin 0
+    :padding 0
+    :width 100%
+    :list-style-type none
+    li
+      :margin 0
+      :padding 3px
+      :cursor pointer
+    li.selected
+      :background-color #ffb
+    strong.highlight
+      :color #800
+      :margin 0
+      :padding 0
+.location
+  :font-size 12px
+ul.list
+  :list-style-type none
+  :line-height 30px
+  :padding 0
+  li
+    :border 1px solid transparent
+  > li
+    :padding-left 5px
+    :position relative
+    :cursor pointer
+    ul
+      :list-style-type none
+    a.remote
+      :display block
+      :width 100%
+ul.stops
+  > li
+    &:hover
+      .location
+        :display block
+    > .location
+      :position absolute
+      :top 2px
+      :right 7px
+      :display none
+ul.lines
+  > li
+    :margin-bottom 10px
+    :padding 0 0 0 10px
+    > span
+      :font-size 20px
+      :position absolute
+      :top 5px
+    > ul
+      :padding 0 0 0 30px
+      :line-height 30px
+      > li
+        :padding-left 5px
+        a
+          :display block
+          :width 100%
+        a
+          &:hover
+            :color inherit
+
+ul.timetables
+  > li > a
+    :font-weight bold
+  ul
+    :display block
+    :margin 0
+    :position absolute
+    :top 0
+    :padding-left 40px
+    > li
+      :display table-cell
+      :white-space nowrap
+      :width 110px
+      > .small
+        :margin-left 3px
+ul.index_timetables
+  > li
+    > a
+      :padding-left 25px
+    > select
+      :margin-left 25px
+    > span
+      :position absolute
+      :left 5px
+      :top 2px
+#edit_line_select_date
+  :margin 5px
+  :text-align center
+#indexTimetables
+  > div
+    > div
+      &:first-child
+        :width 20px
+    &:hover
+      :background-color = !table_highlight
+    a
+      :display block
+      :width 100%
+.direction
+  :margin 5px 0
+  :clear both
+#prefix
+  :font-size 12px
+  input
+    :width 60px
+#navigation
+  :border-color #FEC400
+  :border-width 1px 0 0
+  :border-style solid
+  :margin 30px 0 0
+  :padding 10px 0
+  :text-align center
+#objDetails
+  :margin 10px 0
+  > .tr
+    > .td
+      :text-align right
+      &:first-child
+        :padding-right 20px
+        :width 140px
+        :white-space nowrap
+        + .td
+          :font-weight bold
+        + .td + .td
+          :opacity 0.5
+          :text-align left
+          :padding-left 5px
+#footer
+  :display table-cell
+  :vertical-align bottom
+  > p
+    :font-size 11px
+    :border-color = !link_color
+    :border-style solid
+    :border-width 1px 0 0
+    :margin 0
+    :padding 10px 0 0
+    :text-align center
+
+.fg-button
+  :outline 0
+  :margin 0 4px 0 0
+  :padding .4em 0
+  :text-decoration none !important
+  :cursor pointer
+  :position relative
+  :text-align center
+  :zoom 1
+  .ui-icon
+    :position absolute
+    :top 50%
+    :margin-top -8px
+    :left 50%
+    :margin-left -8px
+a.fg-button
+.fg-button-icon-left
+  :padding-left 2.1em
+  .ui-icon
+    :right auto
+    :left .2em
+    :margin-left 0
+.fg-button-icon-right
+  :padding-right 2.1em
+  .ui-icon
+    :left auto
+    :right .2em
+    :margin-left 0
+.fg-button-icon-solo
+  :display block
+  :width 8px
+  :text-indent -9999px
+.fg-buttonset
+  :float left
+  :margin 5px 0
+  :width 100%
+  .fg-button
+    :float left
+.fg-buttonset-single .fg-button, .fg-buttonset-multi .fg-button
+  :margin-right -4px
+  :margin-bottom 2px
+.fg-toolbar
+  :padding .5em
+  :margin 0
+  .fg-buttonset
+    :margin-right 1.5em
+    :padding-left 1px
+  .fg-button
+    :font-size 1em
+.even
+  :background-color #ddd
+#liveSearch
+  :width 100%
+#date-picker
+  :margin 10px 0
+a .gchart
+  &:hover
+.state-error
+  :font-size 12px
+  span
+    :float left
+    :margin-right 0.3em
+h1.ui-widget-header
+  a
+    :size 10px
+.ui-icon
+  :float left
+  :margin 0 0.5em
+.left-margin
+  :margin-left 23px
+#load_icon
+  :position absolute
+  :background url('/images/ajax-loader.gif') no-repeat
+  :width 16px
+  :height 16px
+  :top 12px
+  :right 20px
+.message a
+  :color #fff
+  :font-weight bold
+#current_timetables, #all_timetables
+  :display none
+
+.time
+  :width 100%
+  :display block
+  select
+    :width 48%
+    &:last-child
+      :float right

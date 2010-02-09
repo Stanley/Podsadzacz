@@ -1,0 +1,298 @@
+html, body {
+  font-size: 17px;
+  font-family: sans-serif;
+  color: #000; }
+
+a, a:visited {
+  color: #004aa5;
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: underline; }
+
+img {
+  border: 0; }
+
+input, select {
+  font-size: 17px; }
+
+select {
+  max-width: 250px; }
+
+input[type=text] {
+  width: 100%; }
+
+textarea {
+  height: 200px;
+  width: 100%; }
+
+h1 {
+  background-color: #F3EEE1;
+  color: #555;
+  font-size: 25px;
+  padding-left: 6px; }
+  h1 img {
+    vertical-align: middle;
+    padding: 5px 0; }
+
+ul {
+  padding: 0 25px; }
+
+strong[title] {
+  font-weight: normal;
+  border-bottom: thin dotted;
+  cursor: help; }
+
+#searchTime select, #searchDay select {
+  width: 90px; }
+
+#filtr {
+  text-align: center; }
+  #filtr > .actived {
+    font-weight: bold;
+    background-color: #ece1c8;
+    color: #555; }
+    #filtr > .actived:hover {
+      text-decoration: none; }
+
+#hello {
+  text-align: justify; }
+  #hello:first-letter {
+    font-size: 28px;
+    padding: 3px 3px 0 0;
+    float: left; }
+
+#notice {
+  background-color: #DDFFDD;
+  border: 1px solid green;
+  color: green;
+  margin-top: 30px;
+  padding: 5px;
+  text-align: center; }
+
+.red {
+  color: red; }
+
+.urgent {
+  background-color: red; }
+
+.table, #howlong, #lineInfo {
+  display: table;
+  width: 100%; }
+  .table .tr, #howlong .tr, #lineInfo .tr {
+    display: table-row; }
+  .table .td, #howlong .td, #lineInfo .td {
+    display: table-cell;
+    padding: 0 0 0 10px; }
+
+#howlong {
+  width: 100%; }
+  #howlong .td {
+    cursor: pointer;
+    text-align: center; }
+    #howlong .td:first-child {
+      text-align: right;
+      font-weight: bold; }
+  #howlong .td:first-child {
+    width: 0; }
+
+#yield {
+  width: 600px;
+  margin: auto; }
+
+.infowindow p {
+  margin: 0;
+  padding: 2px; }
+
+.numbers > a {
+  border: 1px #aaa solid;
+  color: #555;
+  font-weight: bold;
+  padding: 5px 0;
+  display: inline-block;
+  text-align: center;
+  width: 30px; }
+  .numbers > a:hover {
+    border-color: #000; }
+
+.small {
+  font-size: 9px;
+  color: gray; }
+
+#search {
+  width: 400px;
+  margin: auto; }
+  #search > .tr > .td:first-child {
+    text-align: right; }
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table; }
+
+#errorExplanation {
+  border: 2px solid #FFBB96;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0; }
+  #errorExplanation h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    background-color: #FE5900;
+    color: #fff; }
+  #errorExplanation p {
+    color: #333;
+    margin-bottom: 0;
+    padding: 5px; }
+  #errorExplanation ul li {
+    font-size: 12px;
+    list-style: square; }
+
+.admin a {
+  border-bottom: 1px red dotted;
+  color: red; }
+  .admin a:hover {
+    background-color: red;
+    color: #fff;
+    text-decoration: none; }
+
+#lineInfo {
+  border: 1px solid #aaa;
+  margin: auto; }
+
+#lineNo {
+  font-size: 40px;
+  font-weight: bold;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  width: 60px;
+  display: table-cell;
+  vertical-align: middle; }
+
+#lineRoute {
+  display: table-cell;
+  height: 0;
+  padding: 5px;
+  vertical-align: middle;
+  font-size: 13px; }
+  #lineRoute > div {
+    max-height: 54px;
+    overflow: auto; }
+
+.right {
+  text-align: right; }
+
+.zebra2Even {
+  background-color: #f3eee1; }
+
+.zebra2Odd {
+  background-color: #fff; }
+
+.zebra2Even:hover, .zebra2Odd:hover {
+  background-color: #b5aa8d; }
+
+.zebra2Even[title=Tymczasowa]:hover, .zebra2Odd[title=Tymczasowa]:hover {
+  background-color: yellow; }
+
+#linesIndex > div:hover {
+  background-color: #b5aa8d; }
+#linesIndex > div > div:first-child {
+  font-size: 25px;
+  vertical-align: middle;
+  text-align: right; }
+
+#submit {
+  width: 100%;
+  background-color: #f3eee1;
+  text-align: center; }
+
+div.auto_complete {
+  width: 350px;
+  background: #fff;
+  z-index: 1; }
+  div.auto_complete ul {
+    border: 1px solid #888;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style-type: none; }
+    div.auto_complete ul li {
+      margin: 0;
+      padding: 3px;
+      cursor: pointer; }
+    div.auto_complete ul li.selected {
+      background-color: #776d51;
+      color: #fff; }
+    div.auto_complete ul strong.highlight {
+      color: #800;
+      margin: 0;
+      padding: 0; }
+
+#footage {
+  margin: 20px 0px;
+  padding: 10px 20px;
+  border: 1px #AAAAAA solid;
+  text-align: center; }
+
+#indexTimetables > div > div:first-child {
+  width: 10px; }
+
+.zebra {
+  display: table-row; }
+  .zebra:hover {
+    background-color: #aaaaaa; }
+
+.zebra p {
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+  cursor: pointer; }
+
+.zebra2 {
+  background-color: #fff; }
+  .zebra2:hover {
+    background-color: inherit; }
+  .zebra2 a {
+    display: block;
+    width: 100%; }
+
+.even {
+  background-color: #eee; }
+
+#stopsIndex > div > div {
+  height: 30px;
+  vertical-align: middle; }
+  #stopsIndex > div > div:hover {
+    background-color: #aaaaaa; }
+    #stopsIndex > div > div:hover > div > .location {
+      display: block; }
+  #stopsIndex > div > div > div {
+    height: 18px;
+    position: relative;
+    white-space: nowrap;
+    vertical-align: middle; }
+    #stopsIndex > div > div > div > .location {
+      position: absolute;
+      top: 2px;
+      right: 7px;
+      color: #ECE1C8;
+      display: none; }
+      #stopsIndex > div > div > div > .location:hover {
+        text-decoration: none; }
+  #stopsIndex > div > div a {
+    display: block;
+    width: 100%; }
+
+#objDetails > .tr > .td {
+  line-height: 25px; }
+  #objDetails > .tr > .td:first-child + .td {
+    text-align: right;
+    width: 0; }
+  #objDetails > .tr > .td:first-child + .td + .td {
+    padding-left: 0;
+    width: 0; }

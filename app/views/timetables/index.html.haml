@@ -1,0 +1,41 @@
+%h1.ui-widget-header
+  Przystanki na lini
+  = @line.no
+%p
+  - unless @stops
+    .red Brak Przystanków na trasie!
+
+%ul.list.index_timetables
+
+  -# @timetables.flatten.each do |timetable|
+  - @stops.each do |stop|
+    %li{:class => "#{'left-margin' if false and timetable.line_id != @line.id}"}
+      %span= link_to image_tag("rozklad.png", :title => "Rozkład jazdy", :alt => "R"), line_timetable_path(@line['_id'], stop['_id']), :class => 'timetable', :rel => stop.id
+      = link_to stop.name, stop_path(stop['_id']), :rel => stop.id
+      -#if session.authenticated?
+        .admin= link_to 'Edytuj', timetable_path( timetable), :style => "position:absolute;right:5px;top:0;z-index:1"
+  %li= link_to @line['destination'], "stop_path(@line.direction)" 
+
+  -# if @timetables
+    - @timetables.each do |timetable|
+      %li{:class => "#{'left-margin' if timetable.line_id != @line.id}"}
+        %span= link_to image_tag("rozklad.png", :title => "Rozkład jazdy", :alt => "R"), url(:timetable, timetable), :class => 'timetable', :rel => timetable.id
+        = _link_to timetable.stop.name, url(:stop, timetable.stop), :rel=>timetable.stop_id
+        -if session.authenticated?
+          .admin= link_to 'Edytuj', url(:timetable, timetable), :style=>"position:absolute;right:5px;top:0;z-index:1"
+    %li= _link_to @line.direction_name, url(:stop, @line.direction)
+
+    - if not @another_destination.empty?
+      - @another_destination.each do |timetable|
+        %li{:class => 'left-margin'}
+          %span= link_to image_tag("rozklad.png", :title => "Rozkład jazdy", :alt => "R"), url(:timetable, timetable), :class => 'timetable', :rel => timetable.id
+          = _link_to timetable.stop.name, url(:stop, timetable.stop), :rel=>timetable.stop_id
+          -if session.authenticated?
+            .admin= link_to 'Edytuj', url(:timetable, timetable), :style=>"position:absolute;right:5px;top:0;z-index:1"
+      %li{:class => 'left-margin'}= _link_to @another_destination.last.line.direction_name, url(:stop, @another_destination.last.line.direction)
+
+
+%p= link_to 'Przeciwny kierunek', "url(:line_timetables, @line.opposite)" if false and @line.opposite
+= link_to '&laquo; Powrót do linii', line_path(@line)
+
+= link_to '', '/javascripts/timetables/index.js', :id => "scriptLink"

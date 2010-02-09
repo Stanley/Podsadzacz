@@ -1,0 +1,24 @@
+!!! 1.1
+%html{:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => "en"}
+  %head
+    %meta{'http-equiv' => "content-type", :content => "text/html;charset=UTF-8"}/
+    %title Podsadzacz - Kraków
+    = stylesheet_link_tag 'lightstyle' #, 'jquery.autocomplete'
+    -# require_js 'jquery', 'jquery.autocomplete', 'applicationLight'
+    -# include_required_js
+  %body
+    -# if session.authenticated?
+      #header
+        = "Witaj ", session.user.login , "!"
+    -# #yield
+      - unless message[:notice].blank?
+        %p.green= message[:notice]
+      - unless message[:error].blank?
+        %p.red= message[:error]
+      = catch_content :for_layout
+    = yield
+
+    #footage
+      = link_to 'Wyszykiwarka połączeń', '/search'
+      = link_to 'Linie', lines_path
+      = link_to 'Przystanki', stops_path

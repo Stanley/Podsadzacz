@@ -1,0 +1,13 @@
+#timetable {
+  width: 500px; }
+  #timetable > .tr > .td:first-child {
+    display: none; }
+
+#route span {
+  display: none; }
+#route span.upcase {
+  display: inline;
+  text-transform: capitalize; }
+
+#stopname:before {
+  content: "?"; }
