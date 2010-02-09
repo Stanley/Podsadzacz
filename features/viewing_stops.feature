@@ -11,7 +11,7 @@ Feature: viewing stops
       | Baszta        | 1.123456789         | 50.123456789012345  |               |
       | Basztowa LOT  | 13.123456789012345  | 20.123456789        |               |
       | Krowoderska   | 2.21441             | 43.12121214578441   | ul. Basztowa  |
-    When I go to /stops
+    When I go to stops page
     Then I should not see any stops
     And I should see "Live search"
 

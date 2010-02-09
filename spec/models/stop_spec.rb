@@ -88,10 +88,9 @@ describe Stop do
         @stop.gchart(day).should eql({})
       end
     end
-
   end
 end
-# 
+
 # describe "New active" do
 # 
 #   it "should generate some traffic"

@@ -1,5 +1,7 @@
+# encoding: utf-8
+
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
-require 'merb/mpk/lib/mpk'
+#require 'merb/mpk/lib/mpk'
 
 DAYS = {
   :monday => Date.parse("Mon"),
@@ -119,14 +121,14 @@ describe Line do
   #end
 
   describe "tram 1" do
-    before do
-      repository(:archive){
-        Line.auto_migrate!
-        Timetable.auto_migrate!
-      }
-      Line.auto_migrate!
-      Timetable.auto_migrate!
-    end
+#    before do
+#      repository(:archive){
+#        Line.auto_migrate!
+#        Timetable.auto_migrate!
+#      }
+#      Line.auto_migrate!
+#      Timetable.auto_migrate!
+#    end
 
     describe "direction: Wzgórza" do
       before do

@@ -1,11 +1,3 @@
-After do
-  @cleanup_types.each { |klass| klass.all.destroy! }
-end
- 
-Before do
-  @cleanup_types = []
-end
-
 Given /^(only )?stop with (.+) exists$/ do |only, params|                                                                                                                                         
   Given "there are no stops" if only
  
@@ -21,11 +13,11 @@ Given /^(only )?stop "(.+)" exists$/ do |only, name|
 end
 
 Given "there are no stops" do
-  Stop.all.destroy!
+#  Stop.all.destroy!
 end
 
 Given /^the following stops exist in the system:$/ do | attrs_table |
-  Stop.all.destroy!
+#  Stop.all.destroy!
 
   attrs_table.hashes.each do |attrs|
     stop = Stop.new attrs

@@ -20,6 +20,14 @@ Spec::Runner.configure do |config|
 #  config.use_instantiated_fixtures  = false
 #  config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 
+  config.before(:all) do
+    CouchRestRails::Database.create
+  end
+
+  config.after(:all) do
+    CouchRestRails::Database.delete
+  end
+
   # == Fixtures
   #
   # You can declare fixtures for each example_group like this:
