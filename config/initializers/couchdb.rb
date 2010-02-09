@@ -2,7 +2,7 @@ begin
 
   env = ENV['RAILS_ENV'] || 'development'
 
-  couchdb_config = YAML::load(ERB.new(IO.read(RAILS_ROOT + "/config/couchdb.yml")).result)[env]
+  couchdb_config = YAML::load(ERB.new(IO.read("config/couchdb.yml")).result)[env]
 
   host      = couchdb_config["host"]      || 'localhost'
   port      = couchdb_config["port"]      || '5984'
@@ -21,8 +21,8 @@ begin
     "#{CGI.escape(username)}:#{CGI.escape(password)}@#{host}"
 
 rescue
-
-  raise "There was a problem with your config/couchdb.yml file. Check and make sure it's present and the syntax is correct."
+        raise
+#  raise "There was a problem with your config/couchdb.yml file. Check and make sure it's present and the syntax is correct."
 
 else
 
