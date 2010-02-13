@@ -1,0 +1,49 @@
+:javascript
+  $("#live_search").autocomplete('search.php', {
+    width: 300,
+    matchContains: true
+  })
+
+-#
+  var search = $("#live_search")
+
+  var div = document.createElement("div")
+  div.className = "ac_results"
+
+  var results = $(document.createElement("ul"))
+  results.attr('id', 'live_results')
+  results.prependTo(div)
+  $(div).insertAfter(search)
+
+  search.keyup(function(){
+
+    console.log(this.value + ": ")
+    var val = this.value
+    var db = root.db
+
+    if(val == ""){
+      results.empty()
+      return
+    }
+
+    db.transaction(
+      function (transaction) {
+        var sql = "SELECT id,name FROM stops WHERE name LIKE '%" + val + "%' GROUP BY name ORDER BY name LIMIT 0, 10"
+        transaction.executeSql(sql, [],
+          function(transaction, result){
+            results.empty()
+            for(var i=0; i < result.rows.length; i++) {
+              var li = $(document.createElement("li"))
+              li.text(result.rows.item(i).name)
+              results.append(li)
+              console.log( result.rows.item(i).name )
+            }
+
+          },
+          function(){
+            console.log("err")
+          }
+        )
+      }
+    )
+  })

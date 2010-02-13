@@ -13,7 +13,11 @@
     // return false
   })
 
-  // $(".fg-button").unbind()
+  $(".numbers > a.remote").click(function(){
+    $("#yield").load(this.href)
+    return false
+  })
+
   $(".fg-button:not(.ui-state-disabled)")
     .hover(
       function(){
@@ -23,6 +27,8 @@
         $(this).removeClass("ui-state-hover")
       }
     )
+
+  $(".fg-buttonset > .fg-button:not(.ui-state-disabled)")
     .mousedown(function(){
       if($(this).hasClass("ui-state-active")){
         $("#yield").load(this.href)
@@ -46,7 +52,7 @@
       return false
     })
 
-  $(".fg-buttonset > .fg-button:first").addClass("ui-corner-left ui-state-active")
+  $(".fg-buttonset > .fg-button:first").addClass("ui-corner-left")
   $(".fg-buttonset > .fg-button:last").addClass("ui-corner-right")
   $(".fg-buttonset > .fg-button").width(100 / $(".fg-buttonset > .fg-button").length + "%")
 
@@ -62,8 +68,9 @@
   });
 
   $(".fg-buttonset").prepend(div)
-  $(".fg-buttonset > div:first .fg-button").height(tallest);
-  $(".fg-buttonset > .numbers:not(:first)").hide()
+  $(".fg-buttonset > div:first .fg-button").height(tallest)
+
+  $(".fg-buttonset > div > .fg-button:first").mousedown()
 
   function refresh(){
     $.ajax({

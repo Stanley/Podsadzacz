@@ -1,12 +1,14 @@
-= error_messages_for @stop
-= _form_for(@stop, :action => (url(:stop, @stop) rescue url(:stops))) do
+-#= error_messages_for @stop
+- form_tag(stop_path(@stop['_id']), :method => "put") do
   %p
-    = text_field :name, :label => "Nazwa"
+    = label :stop, :name, "Nazwa"
+    = text_field :stop, :name
   %p
-    = text_field :location, :label => "Ulica"
+    = label :stop, :location, "Ulica"
+    = text_field :stop, :location
   %p
-    = label "Położenie"
-    = text_field :lat
-    = text_field :lng
+    = label :stop, :lat, "Położenie"
+    = text_field :stop, :lat
+    = text_field :stop, :lng
   %p#submit
-    = submit submit
+    = submit_tag "submit"
