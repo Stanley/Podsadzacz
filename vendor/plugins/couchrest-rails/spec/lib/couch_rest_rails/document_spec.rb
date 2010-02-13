@@ -27,5 +27,11 @@ describe CouchRestRails::Document do
     end
     
   end
-  
+
+  it "should return only those properties we are asking for" do
+    article = Article.create(:title => 'my title', :content => 'my content')
+    article.only("title").should == {'title' => 'my title', 'couchrest-type' => 'Article'}
+    article.except("title").delete("title").should be_nil
+  end
+
 end
