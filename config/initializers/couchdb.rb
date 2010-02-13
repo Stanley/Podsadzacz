@@ -21,8 +21,8 @@ begin
     "#{CGI.escape(username)}:#{CGI.escape(password)}@#{host}"
 
 rescue
-        raise
-#  raise "There was a problem with your config/couchdb.yml file. Check and make sure it's present and the syntax is correct."
+
+  raise "There was a problem with your config/couchdb.yml file. Check and make sure it's present and the syntax is correct."
 
 else
 
@@ -33,4 +33,6 @@ else
   }
 
   COUCHDB_SERVER = CouchRest.new COUCHDB_CONFIG[:host_path]
+
+  CouchRestRails.use_lucene  = true
 end

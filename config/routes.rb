@@ -13,6 +13,12 @@ Podsadzacz::Application.routes.draw do |map|
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
+  resources :lines do
+    resources :timetables
+  end
+
+  resources :stops
+
   # Sample resource route with options:
   #   resources :products do
   #     member do
@@ -50,9 +56,12 @@ Podsadzacz::Application.routes.draw do |map|
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
 
+  root :to => "map#index"
+
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
+
+   match ':controller(/:id(/:action(.:format)))'
 end
