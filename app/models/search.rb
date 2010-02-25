@@ -99,7 +99,7 @@ class Search < CouchRestRails::Document
         end
 
         # Obsłuż brak połączeń
-        # next unless timetable
+        next unless timetable
 
         next_hub = Hub.new node, timetable.line_id
         timetable.nextinline = next_hub.timetable

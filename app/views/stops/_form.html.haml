@@ -12,3 +12,5 @@
     = text_field :stop, :lng
   %p#submit
     = submit_tag "submit"
+    or
+    = link_to "Cancel", stop_path(@stop['_id'])

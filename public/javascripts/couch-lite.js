@@ -45,7 +45,7 @@ CouchDB.prototype.pull = function(rev, callback){
     type    : "GET",
     dataType: "jsonp",
     success : function(json){
-      console.log(uri + "/podsadzacz_development/_design/Stop/_view/by_updated_at?startkey=[" + rev + "]")
+      console.log(uri + "/_design/Stop/_view/by_updated_at?startkey=[" + rev + "]")
       // TODO: DB Error handling
       couch.bulk_save(db, json.rows, callback)
     },

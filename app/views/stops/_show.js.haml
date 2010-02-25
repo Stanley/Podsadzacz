@@ -1,78 +1,87 @@
 :javascript
-  var map = root.map
 
-  $.jGrowl("Kliknij poniżej, aby zbliżyć widok na przystanek: #{ @stop.name }.<br /><br />Skala: <a href='javascript: map.setZoom(17)'>50m</a> <a href='javascript: map.setZoom(16)'>100m</a> <a href='javascript: map.setZoom(15)'>200m</a>.")
-  map.panTo(new google.maps.LatLng(#{ @stop.lng }, #{ @stop.lat }))
-  try{ google.maps.event.trigger(root.markers['#{ @stop['_id'] }'], 'click') } catch(e){}
+  function Stage(podsadzacz){
+    this.root = podsadzacz
+    this.map = podsadzacz.map
+    this.markers = podsadzacz.markers
+  }
 
+  Stage.prototype.setup = function(){
 
-  $("#yield ul.list.timetables > li").click(function(){
-    var link = $(this).find("a:first-child")
-    console.log(link.attr('href'))
-    showTimetable(link.attr('href'))
-    // return false
-  })
+    $.jGrowl("Kliknij poniżej, aby zbliżyć widok na przystanek: #{ @stop.name }.<br /><br />Skala: <a href='javascript: map.setZoom(17)'>50m</a> <a href='javascript: map.setZoom(16)'>100m</a> <a href='javascript: map.setZoom(15)'>200m</a>.")
+    this.map.panTo(new google.maps.LatLng(#{ @stop.lat }, #{ @stop.lng }))
+    try{ google.maps.event.trigger(this.markers['#{ @stop['_id'] }'], 'click') } catch(e){}
 
-  $(".numbers > a.remote").click(function(){
-    $("#yield").load(this.href)
-    return false
-  })
+    $("#yield ul.list.timetables > li").click(function(){
+      var link = $(this).find("a:first-child")
+      console.log(link.attr('href'))
+      showTimetable(link.attr('href'))
+      // return false
+    })
 
-  $(".fg-button:not(.ui-state-disabled)")
-    .hover(
-      function(){
-        $(this).addClass("ui-state-hover")
-      },
-      function(){
-        $(this).removeClass("ui-state-hover")
-      }
-    )
+    var that = this
+    $(".numbers > a.remote").click(function(){ return that.root.linkToRemote(this.href) })
 
-  $(".fg-buttonset > .fg-button:not(.ui-state-disabled)")
-    .mousedown(function(){
-      if($(this).hasClass("ui-state-active")){
-        $("#yield").load(this.href)
-      }
-      else{
-        $(this).parents(".fg-buttonset-single:first").find(".fg-button.ui-state-active").removeClass("ui-state-active")
-        $(this).addClass("ui-state-active")
-        if(!$(this).hasClass("remote")){
-          $(".fg-buttonset > .numbers:visible").hide()
-          $(".list > li:visible").hide()
-          $(".fg-buttonset > .numbers[rel=" + $(this).attr("rel") + "], .list > li[rel=" + $(this).attr("rel") + "]").fadeIn("fast")
+    $(".fg-button:not(.ui-state-disabled)")
+      .hover(
+        function(){
+          $(this).addClass("ui-state-hover")
+        },
+        function(){
+          $(this).removeClass("ui-state-hover")
         }
+      )
+
+    $(".fg-buttonset > .fg-button:not(.ui-state-disabled)")
+      .mousedown(function(){
+        if($(this).hasClass("ui-state-active")){
+          that.root.linkToRemote(this.href)
+        }
+        else{
+          $(this).parents(".fg-buttonset-single:first").find(".fg-button.ui-state-active").removeClass("ui-state-active")
+          $(this).addClass("ui-state-active")
+          if(!$(this).hasClass("remote")){
+            $(".fg-buttonset > .numbers:visible").hide()
+            $(".list > li:visible").hide()
+            $(".fg-buttonset > .numbers[rel=" + $(this).attr("rel") + "], .list > li[rel=" + $(this).attr("rel") + "]").fadeIn("fast")
+          }
+        }
+      })
+      .mouseup(function(){
+        if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button, .fg-buttonset-multi .fg-button') ){
+          $(this).removeClass("ui-state-active")
+        }
+      })
+      .click(function(){
+        return false
+      })
+
+    $(".fg-buttonset > .fg-button:first").addClass("ui-corner-left")
+    $(".fg-buttonset > .fg-button:last").addClass("ui-corner-right")
+    $(".fg-buttonset > .fg-button").width(100 / $(".fg-buttonset > .fg-button").length + "%")
+
+    div = document.createElement("div")
+    tallest = 0
+
+    $(".fg-buttonset > .fg-button").each(function() {
+      thisHeight = $(this).height();
+      if(thisHeight > tallest) {
+        tallest = thisHeight;
       }
-    })
-    .mouseup(function(){
-      if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button, .fg-buttonset-multi .fg-button') ){
-        $(this).removeClass("ui-state-active")
-      }
-    })
-    .click(function(){
-      return false
-    })
+      div.appendChild(this)
+    });
 
-  $(".fg-buttonset > .fg-button:first").addClass("ui-corner-left")
-  $(".fg-buttonset > .fg-button:last").addClass("ui-corner-right")
-  $(".fg-buttonset > .fg-button").width(100 / $(".fg-buttonset > .fg-button").length + "%")
+    $(".fg-buttonset").prepend(div)
+    $(".fg-buttonset > div:first .fg-button").height(tallest)
 
-  div = document.createElement("div")
-  tallest = 0
+    $(".fg-buttonset > div > .fg-button:first").mousedown()
 
-  $(".fg-buttonset > .fg-button").each(function() {
-    thisHeight = $(this).height();
-    if(thisHeight > tallest) {
-      tallest = thisHeight;
-    }
-    div.appendChild(this)
-  });
+    // Adding SVG heatmap
+    var boundaries = new google.maps.LatLngBounds( new google.maps.LatLng(50.11668531313852,20.206199645996094), new google.maps.LatLng(49.97678510561899,19.81996726989746))
+    this.heatmap = new overlaySVG("/images/example.svg", boundaries, this.map)
+  }
 
-  $(".fg-buttonset").prepend(div)
-  $(".fg-buttonset > div:first .fg-button").height(tallest)
-
-  $(".fg-buttonset > div > .fg-button:first").mousedown()
-
-  function refresh(){
+  Stage.prototype.refresh = function(){
     $.ajax({
       url: "http://localhost:5984/podsadzacz_development/_design/Timetable/_view/by_time",
       data: {limit: 20, startkey: ["#{ @stop['_id'] }", 2, "15:04"]},
@@ -138,6 +147,11 @@
           })
       }
     })
+  }
+
+  Stage.prototype.cleanup = function(){
+    this.heatmap.remove()
+    this.root.infowindow.close()
   }
 
   //refresh()

@@ -4,6 +4,7 @@ require "cgi"
 
 class LinesController < ApplicationController
 #  provides :ajax, :js, :json
+  respond_to :html, :json
 
 #   if request.html? then 'standard' end 
 
@@ -62,8 +63,11 @@ class LinesController < ApplicationController
 #      display @lines
 # render @lines
 #     end
+
+    respond_with @lines
   end
 
+  # GET /lines/:id
   def show #(format, id, date = nil)
 
     @line = Line.get(params['id'])
@@ -92,22 +96,17 @@ class LinesController < ApplicationController
 #    redirect resource(line, :format => format, :date => date)
 #  end
 
-  def new
-    only_provides :ajax
+  # GET /lines/new
+  def new    
     @line = Line.new
-    if request.xhr?
-      display @line, :layout => false
-    else
-      display @line
-    end
   end
 
-  def recreate(line)
-    only_provides :ajax, :js
+  # GET /lines/recreate/:no
+  def recreate
 
     @routes = []
-    @no = line['no']
-    @date = line["begin_date"]
+    @no = params['line']['no']
+    @date = params['line']['begin_date']
     routes = Mpk.route(@no, @date)
     dst = "?" # TODO: kierunek linii
     used = []
@@ -151,8 +150,11 @@ class LinesController < ApplicationController
         @routes.last[r] = results
       end
     end
+  end
 
-    display @routes
+  # POST /lines
+  def create
+
   end
 
   def edit(id)
@@ -242,5 +244,19 @@ class LinesController < ApplicationController
     else
       raise InternalServerError
     end
+  end
+
+  def polyline
+    raise NotFound unless params['id']
+#    respond_with Polyline.by_line( :startkey => [params['id'], 0], :endkey => [params['id'], {}] ).map{|p| p.points}
+    @polylines = Polyline.by_line( :startkey => [params['id'], 0], :endkey => [params['id'], {}] ).map{|p| p.points }
+    @timetables = Timetable.by_line( :startkey => [params['id'], 0], :endkey => [params['id'], {}] ).map{|p| p['ratio'] }
+
+    @polylines.map!.with_index do |pol,i|
+#      pol['ratio'] = @timetables[i]
+      [pol, @timetables[i]]
+    end
+
+    respond_with @polylines 
   end
 end # Lines

@@ -37,9 +37,77 @@ class Stop < CouchRestRails::Document
         emit([doc['_id']], doc)
       }
       if (doc['couchrest-type'] == 'Timetable'){
-        emit([doc.line_id, doc.nice], {'_id': doc.stop_id})
+        emit([doc.line_id, doc.nice], {\"_id\": doc.stop_id, \"next2\": doc.next})
       }
     }"
+#  , :reduce =>
+#    "function(keys, values, rereduce){
+#
+#      function decodeLine (encoded) {
+#        var len = encoded.length;
+#        var index = 0;
+#        var array = [];
+#        var lat = 0;
+#        var lng = 0;
+#
+#        while (index < len) {
+#          var b;
+#          var shift = 0;
+#          var result = 0;
+#          do {
+#            b = encoded.charCodeAt(index++) - 63;
+#            result |= (b & 0x1f) << shift;
+#            shift += 5;
+#          } while (b >= 0x20);
+#          var dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+#          lat += dlat;
+#
+#          shift = 0;
+#          result = 0;
+#          do {
+#            b = encoded.charCodeAt(index++) - 63;
+#            result |= (b & 0x1f) << shift;
+#            shift += 5;
+#          } while (b >= 0x20);
+#          var dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+#          lng += dlng;
+#
+#          array.push([lat * 1e-5, lng * 1e-5]);
+#        }
+#
+#        return array;
+#      }
+#
+#      function distance(lat1,lon1,lat2,lon2) {
+#        var R = 6371;
+#        var dLat = (lat2-lat1) * Math.PI / 180;
+#        var dLon = (lon2-lon1) * Math.PI / 180;
+#        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+#          Math.cos(lat1 * Math.PI / 180 ) * Math.cos(lat2 * Math.PI / 180 ) *
+#          Math.sin(dLon/2) * Math.sin(dLon/2);
+#        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+#        return R * c;
+#      }
+#
+#      if(!rereduce){
+#
+#        var length = 0
+#
+#        for(var i=0; i<values.length; i++){
+#          var points = decodeLine(values[i].replace(/\\\\/g, '\\'))
+#          var prev = points.shift()
+#          for(var j=0; j<points.length; j++){
+#            length += distance(prev[0], prev[1], points[j][0], points[j][1])
+#            prev = points[j]
+#          }
+#        }
+#
+#        return length
+#
+#      } else {
+#        return sum(values)
+#      }
+#    }"
 
   view_by :updated_at, :map =>
     "function(doc){
@@ -247,44 +315,43 @@ class Stop < CouchRestRails::Document
   def gchart(date)
 #     Merb::Cache[:memcached].fetch "Stop:" + id.to_s + ":gcharts" do
 
-       require 'google_chart'
 
       out = {}
 
-      GoogleChart::LineChart.new('800x200', "Czas oczekiwania na przystanku: " + name + " (w minutach)", false) do |b|
-
-        start = timetables.map{|x| x.first(date) rescue nil}.compact.min
-        time = start
-
-        i=0
-        data = []                 # Minuty do odjazdu po każdej godzinie
-        while time.hour < 23
-          timetables.each do |t|
-            data << t.nextruns(time).map{|x| x + i*60}
-          end
-          i += 1
-          time += 1.hour
-        end
-
-        data = data.flatten.sort
-        last = 0
-        data.map! do |x|
-          x = x - last
-          last = x + last
-          x
-        end
-
-        b.data "Czas", data
-        b.show_legend = false
-        b.axis :y, :labels => [0, data.max]
-        b.axis :x, :labels => [start, time].map{|x| x.strftime("%H:%M")}
-
-        out[:waiting] = b.to_url #(:chbh=>"a")
-      end unless timetables.empty?
-
-      GoogleChart::Base.new('200x200', 'Przystanek x') do |b|
-        out[:qr_code] = b.to_url(:cht=>"qr", :chl=>"test")
-      end
+#      GoogleChart::LineChart.new('800x200', "Czas oczekiwania na przystanku: " + name + " (w minutach)", false) do |b|
+#
+#        start = timetables.map{|x| x.first(date) rescue nil}.compact.min
+#        time = start
+#
+#        i=0
+#        data = []                 # Minuty do odjazdu po każdej godzinie
+#        while time.hour < 23
+#          timetables.each do |t|
+#            data << t.nextruns(time).map{|x| x + i*60}
+#          end
+#          i += 1
+#          time += 1.hour
+#        end
+#
+#        data = data.flatten.sort
+#        last = 0
+#        data.map! do |x|
+#          x = x - last
+#          last = x + last
+#          x
+#        end
+#
+#        b.data "Czas", data
+#        b.show_legend = false
+#        b.axis :y, :labels => [0, data.max]
+#        b.axis :x, :labels => [start, time].map{|x| x.strftime("%H:%M")}
+#
+#        out[:waiting] = b.to_url #(:chbh=>"a")
+#      end unless timetables.empty?
+#
+#      GoogleChart::Base.new('200x200', 'Przystanek x') do |b|
+#        out[:qr_code] = b.to_url(:cht=>"qr", :chl=>"test")
+#      end
 
       out
 #     end

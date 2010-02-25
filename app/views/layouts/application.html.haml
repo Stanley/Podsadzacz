@@ -16,6 +16,8 @@
       - unless message[:error].blank?
         %p.red= message[:error]
       = catch_content :for_layout
+    - unless flash.blank?
+      %p.green= flash.inspect
     = yield
 
     #footage

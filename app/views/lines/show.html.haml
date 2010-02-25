@@ -12,7 +12,7 @@
                 .admin= link_to '(Wyznacz nową trasę)', "url(:new_line_timetable,@line)"
               - else
                 %span= @line.timetables.first.stop.name
-                %span>= ", " + @line.route + ",&nbsp;" 
+                %span>= ", #{@line.route},&nbsp;".html_safe 
                 %span= @line.direction
 
       -unless @line.active?
@@ -89,4 +89,6 @@
         = link_to 'Strona główna', '/'
         &raquo;
         = link_to 'Spis linii', lines_path
-= link_to '', "url(:line, @line)", :id => "scriptLink"
+
+- content_for :script do
+  = render :partial => 'show.js'

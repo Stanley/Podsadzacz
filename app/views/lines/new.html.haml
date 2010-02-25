@@ -1,0 +1,20 @@
+%h1.ui-widget-header Nowa linia
+
+-#= error_messages_for @line
+
+- form_tag(recreate_lines_path) do
+  %p
+    = label :line, :no, "Numer: "
+    = text_field :line, :no
+  %p
+    = label :line, :begin_date, "Rozkłady jazdy ważne od: "
+    = text_field :line, :begin_date, :value => "aktualne"
+  %p#submit
+    = submit_tag "Odtwórz linię"
+    or
+    = link_to "Cancel", lines_path
+
+-#
+  = check_box :active, :label => 'Linia aktywna?'
+  = check_box :temporary, :label => 'Rozkład tymczasowy?'
+  %p#submit= submit 'Dodaj'

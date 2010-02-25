@@ -1,18 +1,18 @@
 # encoding: utf-8
 
 class StopsController < ApplicationController
-#  provides :ajax, :js, :json
-   
-#  layout :standard
+
+  respond_to :json, :except => :edit
+  respond_to :html, :except => :timetables
+
 #  cache :index, :unless => :authenticated?
 #  eager_cache :create, :index, :uri => '/all-stops.ajax'
 #  eager_cache :delete, :index
 
 #  before :ensure_authenticated, :exclude => [:index, :show, :departures, :search, :search_by_name]
 
-  def index #(format, type = nil, only = "id,name,location,lng,lat,buses,trams", limit = 100, offset = 0)
+  def index
 
-#    @type = type
     @types = {"all" => "wszystkie", "tram" => "tramwajowe", "bus" => "autobusowe"}
 #
 #    @stops = case type
@@ -24,12 +24,16 @@ class StopsController < ApplicationController
 #        Stop.all
 #    end
 
-    @stops = Stop.by_name(:limit => 20)
+    @stops = if(params['q'])
+      Stop.search("by_name", params['q'], :limit => params['limit'] || 20)['rows']
+    else
+      Stop.by_name(:limit => 0)
+    end
 
-#    render :action => 'index' #@stops #, :only => only.split(",").map{|x| x.to_sym} # , :methods => [:linie]
+    respond_with @stops
   end
 
-  def show #(id)
+  def show
 
     @timetables = Timetable.by_stop(:startkey => [params[:id]], :endkey => [params[:id], {}])
     raise NotFound unless @stop = Stop.new(@timetables.shift)
@@ -55,60 +59,55 @@ class StopsController < ApplicationController
 #      end
     end
 
-    @directions = @directions.map{|x,y| [Stop.get(x), y.sort_by{|z| z['line']}]}.sort_by{|x,y| y.size}.reverse 
+    @directions = @directions.map{|x,y| [Stop.get(x), y.sort_by{|z| z['line']}]}.sort_by{|x,y| y.size}.reverse
 
-#    render @stop, {:only => [:id, :name, :location, :lng, :lat, :buses, :trams]}
+    respond_with @stop.only('_id', 'name', 'location', 'lng', 'lat', 'buses', 'trams')
   end
 
-  def departures(id)
-    only_provides :json
-    @stop = Stop.get(id)
-    raise NotFound unless @stop
-
-    render @stop.departures.map{|x| {:id => x[:timetable].id, :m => x[:minutes_left]}}, :layout => false
-  end
+#  def departures(id)
+#    only_provides :json
+#    @stop = Stop.get(id)
+#    raise NotFound unless @stop
+#
+#    render @stop.departures.map{|x| {:id => x[:timetable].id, :m => x[:minutes_left]}}, :layout => false
+#  end
 
   def new
-    only_provides :html, :ajax
     @stop = Stop.new
-
-    if request.xhr?
-      render @stop, :layout => false
-    else
-      render @stop
-    end
   end
 
-  def edit(id)
-    only_provides :html, :ajax, :js
-    @stop = Stop.get(id)
+  def edit
+    @stop = Stop.get(params[:id])
     raise NotFound unless @stop
-
-    display @stop
   end
 
-  def create(stop, format)
+  def create
 
     stop[:lat] = stop[:lat].to_f
     stop[:lng] = stop[:lng].to_f   
 
     @stop = Stop.new(stop)
     if @stop.save
-      redirect resource(@stop, :format => format), :message => {:notice => "Dodano przystanek"}
+      flash[:notice] = "Dodano przystanek"
+      redirect_to stop_path(@stop)
     else
-      message[:error] = "Stop failed to be created"
+      flash[:error] = "Stop failed to be created"
       render :new
     end
   end
 
-  def update(id, stop, format)
-    @stop = Stop.get(id)
+  def update
+
+    @stop = Stop.get(params['id'])
     raise NotFound unless @stop
-    if @stop.update_attributes(stop)
-       redirect resource(@stop, :format => format), :message => {:notice => "Zaktualizowano przystanek"}
+
+    if @stop.update_attributes(params['stop'])
+      flash[:notice] = "Zaktualizowano przystanek"
+      redirect_to stop_path(@stop['_id']) 
     else
       render @stop, :edit
     end
+
   end
 
   def delete(id, format)
@@ -122,58 +121,31 @@ class StopsController < ApplicationController
   end
 
   def misplaced(id)
-    only_provides :ajax
-    
     @stop = Stop.get(id)
     raise NotFound unless @stop
-
-    render @stop
-
   end
 
-  def search(q, only = "id,name,location")
-    only_provides :json
-
-    @stops = Stop.search :conditions => [q]
-    render @stops, :only => only.split(",").map{|x| x.to_sym}, :methods => [:print_nextstops]
-  end
-
-  def search_by_name(q, only = "id,name")
-    only_provides :json
-
-    @stops = Stop.all :name => q
-    display @stops #, {:only => only.split(",").map{|x| x.to_sym}, :methods => [:print_nextstops]}
-  end
-
-  def timetables #(id, only = "id,line_id")
+#  def search(q, only = "id,name,location")
 #    only_provides :json
+#
+#    @stops = Stop.search :conditions => [q]
+#    render @stops, :only => only.split(",").map{|x| x.to_sym}, :methods => [:print_nextstops]
+#  end
+#
+#  def search_by_name(q, only = "id,name")
+#    only_provides :json
+#
+#    @stops = Stop.all :name => q
+#    display @stops #, {:only => only.split(",").map{|x| x.to_sym}, :methods => [:print_nextstops]}
+#  end
+
+  def timetables
 
     @stop = Stop.get(params['id'])
     raise NotFound unless @stop
-    @timetables = @stop.timetables #.sort_by{|x| x.line.no}
+    @timetables = @stop.timetables.sort_by{|x| x['line']}
 
-    only = "_id,line"
-
-    respond_to do |format|
-#      format.html # index.html.erb
-      format.json  { render :json => @timetables }
-    end
-
-#    display @timetables #, :only => only.split(",").map{|x| x.to_sym}
+    respond_with @timetables.map{ |timetable| timetable.only(* params['only'].blank? ? ["_id", "line", "line_id"] : params['only'].split(",")) }
   end
 
-  #def timetables(id, only = "id,line_id")
-  #  only_provides :json
-  #
-  #  @stop = Stop.get(id)
-  #  raise NotFound unless @stop
-  #
-  #  @timetables = @stop.timetables.sort_by{|x| x.line.no}
-
-    #display @timetables, :only => only.split(",").map{|x| x.to_sym}
-
-    #display @stop, :only => only.split(",").map{|x| x.to_sym}
-
-    # display @locations, :except => [:locatable_type, :locatable_id], :include => [:locatable]
-  #end
 end # Stops

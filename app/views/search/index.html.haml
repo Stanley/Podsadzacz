@@ -1,28 +1,31 @@
-%h1 Szukaj połączeń
-- form_for :search, :url => { :action => "results" } do |f|
+%h1.ui-widget-header Wyszukiwanie połączeń
+- form_for( :search, :url => "/search/results") do |f|
   .table#search
     .tr
       .td
         %b Od:
       .td
-        = f.text_field "from"
+        = text_field "search", "from"
     .tr
       .td
         %b Do:
       .td
-        = f.text_field "to"
+        = text_field "search", "to"
     .tr
       .td= " "
     .tr
       .td
         %b Czas:
       .td
-        = f.select :id, ["Odjazdu", "Przyjazdu", "Jakikolwiek"]
-        = f.select :hour, @hours, { :selected => @selected}
+        = select "search", :id, ["Odjazdu", "Przyjazdu", "Jakikolwiek"]
+        = select "search", :hour, @hours, { :selected => @selected}
     .tr
       .td
         %b Dzień:
       .td#searchDay
-        = f.select :day, ['Dzisiaj', 'Jutro', 'Dzień powszedni', 'Sobota', 'Niedziela' , 'Dokładana data...']
+        = select "search", :day, ['Dzisiaj', 'Jutro', 'Dzień powszedni', 'Sobota', 'Niedziela' , 'Dokładana data...']
   %p#submit
     = f.submit :Szukaj
+    
+- content_for :script do
+  = render :partial => 'index.js'

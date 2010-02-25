@@ -6,3 +6,5 @@ test/*
 db/*
 config/couchdb.yml
 doc/
+lucene/
+couchdb.std*

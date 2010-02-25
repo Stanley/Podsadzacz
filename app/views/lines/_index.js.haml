@@ -1,13 +1,20 @@
 :javascript
-  $("ul.lines > li > ul > li")
-    .bind("mouseenter mouseleave mousedown mouseup", function(){
-      $(this).toggleClass("ui-state-default")
-    })        
-    .bind("mousedown mouseup", function(){
-      $(this).toggleClass("ui-state-hover")
-    })
+  function Stage(podsadzacz){
+  }
 
-  $("ul.lines > li")
-    .bind("mouseenter mouseleave", function(){
-      $(this).toggleClass("ui-state-active")
-    })
+  Stage.prototype.setup = function(){
+    $("ul.lines > li > ul > li")
+      .bind("mouseenter mouseleave mousedown mouseup", function(){
+        $(this).toggleClass("ui-state-default")
+      })
+      .bind("mousedown mouseup", function(){
+        $(this).toggleClass("ui-state-hover")
+      })
+
+    $("ul.lines > li")
+      .bind("mouseenter mouseleave", function(){
+        $(this).toggleClass("ui-state-active")
+      })
+  }
+
+  Stage.prototype.cleanup = function(){}

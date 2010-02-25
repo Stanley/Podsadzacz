@@ -1,0 +1,111 @@
+:javascript
+
+  function Stage(podsadzacz){
+    this.map = podsadzacz.map
+    this.polys = []
+  }
+
+  Stage.prototype.decodeLine = function(encoded){
+    var len = encoded.length;
+    var index = 0;
+    var array = [];
+    var lat = 0;
+    var lng = 0;
+
+    while (index < len) {
+      var b;
+      var shift = 0;
+      var result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      var dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      var dlng = ((result & 1) ? ~(result >> 1) : (result >> 1))
+      lng += dlng
+      array.push([lat * 1e-5, lng * 1e-5])
+    }
+    return array
+  }
+
+  Stage.prototype.setup = function(){
+    var that = this
+    $.ajax({
+      url: "/lines/#{ @line['_id'] }/polyline",
+      dataType: "json",
+      success : function(json){
+        $.each(json, function(){
+          var poly = that.addPolyline( this )
+          if(poly)
+            that.polys.push(poly)
+        })
+        var beg = that.polys[0].getPath().getAt(0)
+        var end = that.polys[that.polys.length - 1].getPath()
+        end = end.getAt(end.getLength() - 1)
+
+        var n,s,e,w
+        if(beg.lat() > end.lat()) {
+          n = beg.lat()
+          s = end.lat()
+        } else {
+          n = end.lat()
+          s = beg.lat()
+        }
+        if(beg.lng() > end.lng()) {
+          e = beg.lng()
+          w = end.lng()
+        } else {
+          e = end.lng()
+          w = beg.lng()
+        }
+
+        that.map.fitBounds(new google.maps.LatLngBounds(new google.maps.LatLng(s,w), new google.maps.LatLng(n,e)) )
+      }
+    })
+  }
+
+  Stage.prototype.addPolyline = function(poly){
+
+    if(poly[0]){
+
+      return new google.maps.Polyline({
+        map: this.map,
+        path: this.decodeLine(poly[0].replace(/\\\\/g, "\\")).map(function(arr){ return new google.maps.LatLng(arr[0], arr[1]) }),
+        strokeColor: this.color(poly[1]),
+        strokeOpacity: 0.6,
+        strokeWeight: 5
+      })
+    }
+  }
+
+  Stage.prototype.color = function(ratio){
+    var hex, rank = (ratio - 5) / (40 - 5)
+    if(rank < 0){
+      hex = "#ff0000"
+    } else if (rank < 1){
+      var red = (Math.round((1-rank)*256)).toString(16)
+      if(red < 10) red = "0" + red
+      var blue = (Math.round(rank*256)).toString(16)
+      if(blue < 10) blue = "0" + blue
+      hex = "#" + red + "00" + blue
+    } else {
+      hex = "#0000ff"
+    }
+    return hex
+  }
+
+  Stage.prototype.cleanup = function(){
+    $.each(this.polys, function(){
+      this.setMap(null)
+    })
+  }

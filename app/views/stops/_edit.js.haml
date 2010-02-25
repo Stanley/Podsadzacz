@@ -1,0 +1,27 @@
+:javascript
+
+  function Stage(podsadzacz){
+    this.map = podsadzacz.map
+    this.lat = $("#stop_lat")
+    this.lng = $("#stop_lng")
+  }
+
+  Stage.prototype.setup = function(){
+    var that = this
+
+    this.marker = new google.maps.Marker({
+      position: new google.maps.LatLng(#{ @stop.lat }, #{ @stop.lng }),
+      map: that.map,
+      title: "#{@stop.name}",
+      draggable: true
+    })
+
+    google.maps.event.addListener(this.marker, "dragend", function() {
+      that.lat.attr("value", this.getPosition().lat())
+      that.lng.attr("value", this.getPosition().lng())
+    })
+  }
+
+  Stage.prototype.cleanup = function(){
+    this.marker.setMap(null)
+  }

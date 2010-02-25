@@ -22,4 +22,5 @@
   %p.admin
     = link_to 'Nowy przystanek', new_stop_path
 
-= link_to '', '/javascripts/stops/index.js', :id => "scriptLink"
+- content_for :script do
+  = render :partial => 'index.js'

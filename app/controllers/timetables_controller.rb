@@ -22,7 +22,7 @@ class TimetablesController < ApplicationController
   def show #(id)
 #    provides :html
 
-    @timetable = Timetable.by_line_stop(:key => [params['line_id'], params['id']], :limit => 1).first 
+    @timetable = Timetable.get params['id'] #Timetable.by_line_stop(:key => [params['line_id'], params['id']], :limit => 1).first 
     raise "NotFound" unless @timetable
 
     @stops = Stop.by_line(:startkey => [@timetable.line_id], :endkey => [@timetable.line_id, {}])

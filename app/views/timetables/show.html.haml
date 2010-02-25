@@ -11,7 +11,7 @@
         .tr
           .td#route
             %b Trasa:
-            %span.upcase= @stops.first.name + ",&nbsp;"
+            %span.upcase= "#{@stops.first.name},&nbsp;".html_safe
             %span>= @line.route
             %span.upcase= ", " + @line.opposite.stops.first.name rescue nil
   .tr

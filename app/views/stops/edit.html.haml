@@ -1,4 +1,6 @@
-%h1 Editing stop
+%h1.ui-widget-header Editing stop
 
-= partial :form, :submit => "Zmień"
+= render :partial => "form", :submit => "Zmień"
 
+- content_for :script do
+  = render :partial => "edit.js"

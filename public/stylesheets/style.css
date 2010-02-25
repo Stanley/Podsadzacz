@@ -42,6 +42,14 @@ p {
 label {
   white-space: nowrap; }
 
+circle {
+  padding: 0;
+  margin: 0; }
+
+circle:hover {
+  stroke: #fff;
+  stroke-width: 0.01mm; }
+
 #container {
   height: 100%; }
 
@@ -312,9 +320,9 @@ ul.list {
     padding-left: 5px;
     position: relative;
     cursor: pointer; }
-    ul.list > li ul {
+    ul.list > li > ul {
       list-style-type: none; }
-    ul.list > li a.remote {
+    ul.list > li > a {
       display: block;
       width: 100%; }
 

@@ -35,7 +35,5 @@
       %li{:class => 'left-margin'}= _link_to @another_destination.last.line.direction_name, url(:stop, @another_destination.last.line.direction)
 
 
-%p= link_to 'Przeciwny kierunek', "url(:line_timetables, @line.opposite)" if false and @line.opposite
+%p= link_to 'Przeciwny kierunek', line_path(@line.opposite['_id']) if false and @line.opposite
 = link_to '&laquo; Powrót do linii', line_path(@line)
-
-= link_to '', '/javascripts/timetables/index.js', :id => "scriptLink"

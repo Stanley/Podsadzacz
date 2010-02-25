@@ -3,7 +3,6 @@ require File.expand_path('../boot', __FILE__)
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
-require "rails/test_unit/railtie"
 
 # Auto-require default libraries and those for the current Rails environment.
 Bundler.require :default, Rails.env
@@ -40,5 +39,9 @@ module Podsadzacz
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
+    config.action_controller.session = {
+      :key    => '_Podsadzacz_session',
+      :secret => 'ef39c2a145e9222b858659404091a18cb94c3bc5f7bd5880e1974cb2be3830f81ceebbe172b0f2c7ed91236f207d5c09faf6db00bcd13b80fbed2920f1b5e786'
+    }
   end
 end

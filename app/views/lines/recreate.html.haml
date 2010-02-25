@@ -1,0 +1,35 @@
+= form_tag(lines_path, :method => "put") do
+  .table
+    - colors = ["#8da2fa", "#9ae51a"]
+    - @routes.each_with_index do |line, i|
+      - j=-1
+      - line.sort.each do |route, all_stops|
+        - j+=1
+        .tr
+          .td
+            %b{:style => "color:" + colors[i]}= route + ":"
+            %ol
+              - all_stops.sort.each do |k, stops|
+                %li
+                  - if not stops.empty?
+                    - if stops.size > 1
+                      = select :stop, :name => "stops[" + i.to_s + "][" + j.to_s + "][" + k.to_s + "]", :collection => stops, :value_method => :id, :text_method => :surrounding
+                    - else
+                      = stops.first.name
+                      = hidden_field :value => stops.first.id, :name => "stops[" + i.to_s + "][" + j.to_s + "][" + k.to_s + "]"
+                      - if not stops.first.location.blank?
+                        %i= ", " + stops.first.location
+                  - else
+                    %span.red= "Błąd - brak przystanku w bazie"
+
+  %p#submit
+    = hidden_field :line_no, :value => @no
+    = hidden_field :date, :value => @date
+    = submit_tag "Stwórz #{ @routes.size.to_s } linie numer #{ @no }"
+
+  -#%p#navigation
+    = _link_to 'Spis linii', url(:lines)
+    &raquo;
+    = _link_to 'Odtwórz', url(:new_line)
+
+-#= link_to '', url("javascripts/lines/recreate.js"), :id => "scriptLink"

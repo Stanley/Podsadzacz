@@ -85,7 +85,7 @@ class Line < CouchRestRails::Document
 
   # Czy to jest konieczne?
   def runs?(date)
-    not timetables.all?{|x| x.minutes(date).empty?}
+    not timetables.all?{|x| x.minutes(date).blank?}
   end
 
   ##
@@ -472,10 +472,11 @@ class Line < CouchRestRails::Document
   end
 
   def polylines
-    ids = timetables.map{|x| x.stop_id if x.level == 0}.compact
-    ids << direction.id if direction
-    all = Polyline.all(:beg_id => ids, :end_id => ids)
-    all.each{|p| p.line = id}
+    @polylines ||= Polyline.by_line( :startkey => [self['_id'], nil], :endkey => [self['_id'], {}] ).map{|p| p.points}
+#    ids = timetables.map{|x| x.stop_id if x.level == 0}.compact
+#    ids << direction.id if direction
+#    all = Polyline.all(:beg_id => ids, :end_id => ids)
+#    all.each{|p| p.line = id}
   end
 
   ##
@@ -724,38 +725,38 @@ class Line < CouchRestRails::Document
 
     @gchart = {}
 
-    require 'google_chart'
-
-    GoogleChart::BarChart.new('800x200', "Okresy kursów linii " + no.to_s + " (w minutach)", :vertical, true) do |b|
-
-      start = Time.parse(timetables.first.start.to_s + ":00")
-      data = timetables.first.minutes(date).compact
-      return {} if data.empty?
-
-      min = data[1..-1].min
-      max = data[1..-1].max
-
-      b.data "Czas", data[1..-1]
-      b.show_legend = false
-      b.axis :y, :labels => [0, min, max], :positions => [0, min, max], :range => [0, max]
-      b.axis :x, :labels => (0..data.size).to_a.map{|i| i%10 == 9 ? i+1 : ""}
-      b.axis :top, :labels => data.map!{|i| (start += i*60).strftime("%H:%M")}[1..-1].map{|x| data.index(x)%10 != 5 ? "" : x}
-      @gchart[:okres] = b.to_url(:chbh=>"a")
-    end
-
-    GoogleChart::BarChart.new('800x200', "Czas przejazdu linii " + no.to_s + " (w minutach)", :vertical, false) do |b|
-      all=times(date)
-
-      b.data "Czas", all #.map{|x| x  - all.max*(2.0/3)}
-      b.show_legend = false
-      b.axis :y, :range => [0, all.max], :labels => [all.min.to_i, all.max.to_i], :positions => [all.min, all.max]
-      b.axis :x, :labels => (0..all.size).to_a.map{|i| i%10 == 9 ? i+1 : ""}
-      b.axis :top, :labels => (0..all.size).to_a.map{|i| i%10 == 4 ? timetables.first.absolute_arrival(date, i).strftime("%H:%M") : ""}
-      b.axis :right, :range => [0, all.max], :labels => ["min", "max"], :positions => [all.min, all.max]
-      @gchart[:time] = b.to_url(:chbh=>"a")
-    end
-
-    @gchart
+#    require 'google_chart'
+#
+#    GoogleChart::BarChart.new('800x200', "Okresy kursów linii " + no.to_s + " (w minutach)", :vertical, true) do |b|
+#
+#      start = Time.parse(timetables.first.start.to_s + ":00")
+#      data = timetables.first.minutes(date).compact
+#      return {} if data.empty?
+#
+#      min = data[1..-1].min
+#      max = data[1..-1].max
+#
+#      b.data "Czas", data[1..-1]
+#      b.show_legend = false
+#      b.axis :y, :labels => [0, min, max], :positions => [0, min, max], :range => [0, max]
+#      b.axis :x, :labels => (0..data.size).to_a.map{|i| i%10 == 9 ? i+1 : ""}
+#      b.axis :top, :labels => data.map!{|i| (start += i*60).strftime("%H:%M")}[1..-1].map{|x| data.index(x)%10 != 5 ? "" : x}
+#      @gchart[:okres] = b.to_url(:chbh=>"a")
+#    end
+#
+#    GoogleChart::BarChart.new('800x200', "Czas przejazdu linii " + no.to_s + " (w minutach)", :vertical, false) do |b|
+#      all=times(date)
+#
+#      b.data "Czas", all #.map{|x| x  - all.max*(2.0/3)}
+#      b.show_legend = false
+#      b.axis :y, :range => [0, all.max], :labels => [all.min.to_i, all.max.to_i], :positions => [all.min, all.max]
+#      b.axis :x, :labels => (0..all.size).to_a.map{|i| i%10 == 9 ? i+1 : ""}
+#      b.axis :top, :labels => (0..all.size).to_a.map{|i| i%10 == 4 ? timetables.first.absolute_arrival(date, i).strftime("%H:%M") : ""}
+#      b.axis :right, :range => [0, all.max], :labels => ["min", "max"], :positions => [all.min, all.max]
+#      @gchart[:time] = b.to_url(:chbh=>"a")
+#    end
+#
+#    @gchart
 
 #       GoogleChart::ScatterChart.new('800x325', "Prędkość średnia na linii " + no.to_s) do |b|
 #
