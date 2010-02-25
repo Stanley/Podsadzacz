@@ -1,8 +1,7 @@
-.ui-widget-header
-  %h1< |
-    = "Linie " + @types[@type].to_s
-    - unless @active
-      = " (nieaktywne)"
+%h1.ui-widget-header
+  = "Linie " + @types[@type].to_s
+  - unless @active
+    = " (nieaktywne)"
 
 %p#filtr
   %b Filtr:
@@ -22,15 +21,11 @@
               .admin= _link_to 'Uzupełnij trasę!', url(:new_line_timetable,line)
             = link_to destination, line_path(id), {:title => "Trasa ??? &#65515; " + destination}
 
--# if session.authenticated?
+- if current_admin
   %p.admin
-    = _link_to 'Dodaj nową linię', url(:new_line)
-    %br/
-    = _link_to 'Sprawdź aktualność rozkładów', url(:lines)
-- if @active
-  = link_to 'Nieaktywne linie', lines_path #url(:lines, "inactive", @type)
-- else
-  = link_to 'Aktywne linie', lines_path #( "active", @type)
-%br
+    = link_to "Dodaj nową linię", new_line_path
+    -#%br/
+      = link_to "Sprawdź aktualność rozkładów"
 
-= link_to '', '/javascripts/lines/index.js', :id => "scriptLink"
+- content_for :script do
+  = render :partial => 'index.js'
